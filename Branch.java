@@ -1,5 +1,3 @@
-package domain.core;
-
 public class Branch {
    public static final Branch CHECKED_OUT = new Branch("unavailable", "b999999");
    private String name;
@@ -8,7 +6,7 @@ public class Branch {
    public Branch(String name) {
       this(name, "");
    }
-   
+
    public Branch(String name, String scanCode) {
       this.name = name;
       this.scanCode = scanCode;

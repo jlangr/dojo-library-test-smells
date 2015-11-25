@@ -1,8 +1,4 @@
-package domain.core;
-
 import java.util.Date;
-import com.loc.material.api.*;
-import util.*;
 
 public class Holding {
    public static final String BARCODE_SEPARATOR = ":";

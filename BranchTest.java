@@ -1,11 +1,7 @@
-package domain.core;
-
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import testutil.EqualityTester;
 
 public class BranchTest {
    public static final String EAST_NAME = "east";

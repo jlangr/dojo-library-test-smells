@@ -1,14 +1,8 @@
-package domain.core;
-
-import static domain.core.MaterialTestData.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import java.util.*;
 
 import org.junit.*;
-import com.loc.material.api.*;
-import testutil.*;
-import util.*;
 
 public class HoldingTest {
    private Holding holding;
@@ -18,32 +12,32 @@ public class HoldingTest {
 
    @Before
    public void setUp() {
-      holding = new Holding(THE_TRIAL, BranchTest.BRANCH_EAST, COPY_NUMBER_1);
+      holding = new Holding(Data.THE_TRIAL, BranchTest.BRANCH_EAST, COPY_NUMBER_1);
    }
 
    @Test
    public void create() {
-      assertMaterial(THE_TRIAL, holding);
+      assertMaterial(Data.THE_TRIAL, holding);
       assertEquals(BranchTest.BRANCH_EAST, holding.getBranch());
       assertEquals(1, holding.getCopyNumber());
    }
 
    @Test
    public void createWithBranchAndCopyDefaults() {
-      Holding holding = new Holding(THE_TRIAL);
+      Holding holding = new Holding(Data.THE_TRIAL);
       assertEquals(Branch.CHECKED_OUT, holding.getBranch());
       assertEquals(1, holding.getCopyNumber());
    }
 
    @Test
    public void createWithCopyDefaults() {
-      Holding holding = new Holding(THE_TRIAL, BranchTest.BRANCH_EAST);
+      Holding holding = new Holding(Data.THE_TRIAL, BranchTest.BRANCH_EAST);
       assertEquals(1, holding.getCopyNumber());
    }
 
    @Test
    public void generatesBarCodeFromClassificationAndCopy() {
-      assertEquals(THE_TRIAL.getClassification() + Holding.BARCODE_SEPARATOR
+      assertEquals(Data.THE_TRIAL.getClassification() + Holding.BARCODE_SEPARATOR
             + COPY_NUMBER_1, holding.getBarCode());
 
       assertEquals("a" + Holding.BARCODE_SEPARATOR + "2",
@@ -114,19 +108,19 @@ public class HoldingTest {
    @Test
    public void testSomething() {
       // movie
-      checkOutToday(DR_STRANGELOVE, BranchTest.BRANCH_EAST);
+      checkOutToday(Data.DR_STRANGELOVE, BranchTest.BRANCH_EAST);
       Date expected = addDays(TODAY, MaterialType.DVD.getCheckoutPeriod());
       assertDateEquals(addDays(TODAY, MaterialType.DVD.getCheckoutPeriod()), holding.dateDue());
 
       // childrens movie
-      checkOutToday(THE_TRIAL_NEW_EDITION, BranchTest.BRANCH_EAST);
+      checkOutToday(Data.THE_TRIAL_NEW_EDITION, BranchTest.BRANCH_EAST);
       expected = addDays(TODAY, MaterialType.Book.getCheckoutPeriod());
       assertDateEquals(expected, holding.dateDue());
    }
 
    @Test
    public void answersDaysLateOfZeroWhenReturnedSameDay() {
-      checkOutToday(THE_TRIAL, BranchTest.BRANCH_EAST);
+      checkOutToday(Data.THE_TRIAL, BranchTest.BRANCH_EAST);
 
       int daysLate = holding.checkIn(TODAY, BranchTest.BRANCH_EAST);
 
@@ -135,7 +129,7 @@ public class HoldingTest {
 
    @Test
    public void answersDaysLateOfZeroWhenReturnedOnDateDue() {
-      checkOutToday(THE_TRIAL, BranchTest.BRANCH_EAST);
+      checkOutToday(Data.THE_TRIAL, BranchTest.BRANCH_EAST);
 
       int daysLate = holding.checkIn(holding.dateDue(), BranchTest.BRANCH_EAST);
 
@@ -144,7 +138,7 @@ public class HoldingTest {
 
    @Test
    public void answersDaysLateWhenReturnedAfterDueDate() {
-      checkOutToday(THE_TRIAL, BranchTest.BRANCH_EAST);
+      checkOutToday(Data.THE_TRIAL, BranchTest.BRANCH_EAST);
       Date threeDaysLate = DateUtil.addDays(holding.dateDue(), 3);
 
       int daysLate = holding.checkIn(threeDaysLate, BranchTest.BRANCH_EAST);
@@ -162,7 +156,11 @@ public class HoldingTest {
    }
 
    static void assertMaterial(MaterialDetails expected, Holding holding) {
-      MaterialTest.assertMaterialsEqual(expected, holding.getMaterial());
+      MaterialDetails actual = holding.getMaterial();
+      assertEquals(expected.getAuthor(), actual.getAuthor());
+      assertEquals(expected.getClassification(), actual.getClassification());
+      assertEquals(expected.getTitle(), actual.getTitle());
+      assertEquals(expected.getYear(), actual.getYear());
    }
 
    public static Date addDays(Date date, int days) {
@@ -181,11 +179,11 @@ public class HoldingTest {
 
    @Test
    public void equality() {
-      Holding holding1 = new Holding(THE_TRIAL, BranchTest.BRANCH_EAST, 1);
-      Holding holding1Copy1 = new Holding(THE_TRIAL, BranchTest.BRANCH_WEST, 1); // diff loc but same copy
-      Holding holding1Copy2 = new Holding(THE_TRIAL, Branch.CHECKED_OUT, 1);
-      Holding holding2 = new Holding(THE_TRIAL, BranchTest.BRANCH_EAST, 2); // 2nd copy
-      Holding holding1Subtype = new Holding(THE_TRIAL, BranchTest.BRANCH_EAST,
+      Holding holding1 = new Holding(Data.THE_TRIAL, BranchTest.BRANCH_EAST, 1);
+      Holding holding1Copy1 = new Holding(Data.THE_TRIAL, BranchTest.BRANCH_WEST, 1); // diff loc but same copy
+      Holding holding1Copy2 = new Holding(Data.THE_TRIAL, Branch.CHECKED_OUT, 1);
+      Holding holding2 = new Holding(Data.THE_TRIAL, BranchTest.BRANCH_EAST, 2); // 2nd copy
+      Holding holding1Subtype = new Holding(Data.THE_TRIAL, BranchTest.BRANCH_EAST,
             1) {
       };
 
